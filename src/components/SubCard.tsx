@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const SubCard = ({ data, onRemove, editSub }: { data: any, onRemove: (id: number) => void, editSub: (id: number) => void }) => {
+const SubCard = ({ data, onRemove, editSub, isAdmin }: { data: any, onRemove?: (id: number) => void, editSub?: (id: number) => void, isAdmin?: boolean }) => {
     const navigate = useNavigate();
 
     const handleBuyClick = async () => {
@@ -24,8 +24,12 @@ const SubCard = ({ data, onRemove, editSub }: { data: any, onRemove: (id: number
                     <p className="card-text">Cena: {data.price} €</p>
                     <div className="d-flex justify-content-between align-items-center">
                         <div className="btn-group">
-                            <button onClick={() => editSub(data.id)} type="button" className="btn btn-sm btn-outline-secondary">Edit</button>
-                            <button onClick={() => onRemove(data.id)} type="button" className="btn btn-sm btn-outline-secondary">Delete</button>
+                            {isAdmin && (
+                                <>
+                                    <button onClick={() => editSub?.(data.id)} type="button" className="btn btn-sm btn-outline-secondary">Edit</button>
+                                    <button onClick={() => onRemove?.(data.id)} type="button" className="btn btn-sm btn-outline-secondary">Delete</button>
+                                </>
+                            )}
                             <button onClick={handleBuyClick} type="button" className="btn btn-sm btn-primary">Kupi</button>
                         </div>
                         <small className="text-body-secondary">9 mins</small>

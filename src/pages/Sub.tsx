@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import SubCard from "../components/SubCard.tsx";
+import SubCard from "../components/SubCard";
 import { useNavigate } from 'react-router-dom';
 import './Sub.css'; // Importiramo CSS za dodatno oblikovanje
 
@@ -10,24 +10,61 @@ const Sub = () => {
     const [errorMessage, setErrorMessage] = useState<string>('');
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [filter, setFilter] = useState<string>('');
+    const [userRole, setUserRole] = useState<string | null>(null);
 
-    const url = "http://localhost:3000/subs";
+    const subsUrl = "http://localhost:3000/subs";
+    const usersUrl = "http://localhost:3000/users"; // URL za pridobitev uporabnikov
     const navigate = useNavigate();
 
     const loadSubs = async () => {
         try {
-            const res = await axios.get(url, {
+            // Pridobi podatke o uporabniku in njegovi vlogi
+            const userRes = await fetch(usersUrl, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("jwt")}`
                 }
             });
-            if (res.status === 200) {
-                setSubs(res.data);
-                applyFilters(res.data);
+
+            if (!userRes.ok) {
+                throw new Error(`HTTP error! status: ${userRes.status}`);
+            }
+
+            const users = await userRes.json();
+            const currentUser = users.find(user => user.id === 5); // Zamenjaj `yourCurrentUserId` z ID-jem prijavljenega uporabnika
+
+            if (currentUser) {
+                const userRoles = currentUser.roles;
+
+                if (userRoles.includes('admin')) {
+                    navigate('/adminpage'); // Preusmeri na admin stran, če je uporabnik admin
+                    return;
+                } else {
+                    setUserRole(userRoles[0]); // Nastavi prvo vlogo uporabnika
+                }
+            } else {
+                setErrorMessage('User not found');
+            }
+        } catch (error) {
+            console.error('Error fetching roles:', error);
+            setErrorMessage('Error fetching user roles');
+        }
+
+        // Naloži podatke o subs samo, če uporabnik ni preusmerjen
+        try {
+            const subsRes = await axios.get(subsUrl, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("jwt")}`
+                }
+            });
+            if (subsRes.status === 200) {
+                setSubs(subsRes.data);
+                applyFilters(subsRes.data);
             }
         } catch (e) {
             if (axios.isAxiosError(e) && e.response) {
-                setErrorMessage(e.response.data.message);
+                setErrorMessage(e.response.data.message || 'Unknown error occurred while loading subscriptions.');
+            } else {
+                setErrorMessage('Unknown error occurred while loading subscriptions.');
             }
         }
     };
@@ -35,32 +72,6 @@ const Sub = () => {
     useEffect(() => {
         loadSubs();
     }, []);
-
-    const addSub = () => {
-        navigate('/addSub');
-    };
-
-    const removeSub = async (id: number) => {
-        const url = `http://localhost:3000/subs/${id}`;
-        try {
-            const res = await axios.delete(url, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("jwt")}`
-                }
-            });
-            if (res.status === 200) {
-                setSubs(subs.filter(sub => sub.id !== id));
-                applyFilters(filteredSubs.filter(sub => sub.id !== id));
-            }
-        } catch (e) {
-            setErrorMessage("Napaka pri brisanju");
-        }
-    };
-
-    const editSub = (id: number) => {
-        const url = `/editSub/${id}`;
-        navigate(url);
-    };
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
@@ -90,7 +101,6 @@ const Sub = () => {
     return (
         <>
             <div className="container mt-5">
-                <button className="btn btn-primary mb-3" onClick={addSub}>Dodaj nov oglas</button>
                 <input
                     type="text"
                     placeholder="Iskanje po imenu izdelka..."
@@ -99,10 +109,16 @@ const Sub = () => {
                     className="form-control mb-3 search-input"
                 />
                 <div className="filter-buttons mb-4 text-center">
-                    <button className={`btn ${filter === 'EUNE' ? 'btn-primary' : 'btn-outline-primary'} me-2`} onClick={() => handleFilterChange('EUNE')}>
+                    <button
+                        className={`btn ${filter === 'EUNE' ? 'btn-primary' : 'btn-outline-primary'} me-2`}
+                        onClick={() => handleFilterChange('EUNE')}
+                    >
                         Prikaži EUNE
                     </button>
-                    <button className={`btn ${filter === 'EUWE' ? 'btn-primary' : 'btn-outline-primary'} me-2`} onClick={() => handleFilterChange('EUWE')}>
+                    <button
+                        className={`btn ${filter === 'EUWE' ? 'btn-primary' : 'btn-outline-primary'} me-2`}
+                        onClick={() => handleFilterChange('EUWE')}
+                    >
                         Prikaži EUWE
                     </button>
                     <button className="btn btn-outline-primary" onClick={() => handleFilterChange('')}>
@@ -115,7 +131,7 @@ const Sub = () => {
                 <div className="container">
                     <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
                         {filteredSubs.map((sub, i) => (
-                            <SubCard key={i} data={sub} onRemove={removeSub} editSub={editSub} />
+                            <SubCard key={i} data={sub} isAdmin={userRole === 'admin'} />
                         ))}
                     </div>
                 </div>

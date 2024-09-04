@@ -10,6 +10,7 @@ import SubEdit from "./pages/SubEdit.tsx";
 import Kontakti from "./pages/Kontakti.tsx";
 import Racun from './pages/Racun';
 import Zahvala from "./pages/zahvala.tsx";
+import AdminPage from "./pages/adminpage.tsx";
 
 function App() {
 
@@ -27,6 +28,7 @@ function App() {
                   <Route path="/editSub/:id" element={<SubEdit/>}/>
                   <Route path="/Kontakti" element={<Kontakti/>}/>
                   <Route path="/Racun" element={<Racun/>}/>
+                  <Route path="/adminpage" element={<AdminPage/>}/>
 
               </Routes>
             </Wrapper>
