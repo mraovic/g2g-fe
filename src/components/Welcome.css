@@ -1,0 +1,51 @@
+/* Welcome.css */
+
+.welcome-section {
+    background: linear-gradient(to bottom, #007bff, #0056b3); /* Gradientna ozadja za večji učinek */
+    color: white; /* Bela barva besedila */
+    padding: 60px 20px; /* Dodamo večji padding za boljši izgled */
+    border-radius: 8px; /* Zaobljeni robovi za lepši videz */
+    margin-bottom: 20px; /* Margin spodaj */
+}
+
+.welcome-content {
+    max-width: 600px; /* Maksimalna širina vsebine */
+    margin: 0 auto; /* Centeriranje vsebine */
+}
+
+.welcome-title {
+    font-size: 3rem; /* Velik naslov */
+    font-weight: 700; /* Poudarjen naslov */
+    margin-bottom: 20px; /* Margin spodaj */
+}
+
+.welcome-description {
+    font-size: 1.25rem; /* Velikost besedila */
+    margin-bottom: 30px; /* Margin spodaj */
+}
+
+.welcome-buttons {
+    display: flex; /* Uporaba Flexbox za poravnavo gumbov */
+    flex-direction: column; /* Postavitev gumbov v stolpec */
+    gap: 10px; /* Razmak med gumbi */
+}
+
+.btn-primary {
+    background-color: #007bff; /* Modra barva ozadja */
+    border-color: #007bff; /* Barva roba */
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* Temnejša modra ob prehodu miške */
+    border-color: #0056b3; /* Barva roba ob prehodu miške */
+}
+
+.btn-secondary {
+    background-color: #6c757d; /* Siva barva ozadja */
+    border-color: #6c757d; /* Barva roba */
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268; /* Temnejša siva ob prehodu miške */
+    border-color: #545b62; /* Barva roba ob prehodu miške */
+}

@@ -1,0 +1,60 @@
+/* Sub.css */
+
+/* Splošno oblikovanje */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Iskalni vnos */
+.search-input {
+    max-width: 400px;
+    margin: 0 auto;
+    display: block;
+    border-radius: 20px;
+    padding: 10px;
+}
+
+/* Filtrirni gumbi */
+.filter-buttons .btn {
+    margin-right: 10px;
+    border-radius: 20px;
+}
+
+/* Karte oglasov */
+.album {
+    background-color: #f8f9fa;
+    padding: 2rem 0;
+}
+
+.album .row {
+    margin-top: 20px;
+}
+
+/* Slog za gumbe */
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: #fff;
+}
+
+.btn-outline-primary {
+    color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-outline-primary:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.btn:hover {
+    opacity: 0.8;
+}
+
+/* Alert za napake */
+.alert {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+}
